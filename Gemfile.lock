@@ -22,6 +22,9 @@ PATH
   remote: ../synthea
   specs:
     synthea (1.0.0)
+      distribution (~> 0.7, >= 0.7.0)
+      faker (~> 1.6, >= 1.6.0)
+      recursive-open-struct (~> 1.0, >= 1.0.0)
 
 PATH
   remote: .
@@ -44,6 +47,7 @@ GEM
     builder (3.2.2)
     coderay (1.1.1)
     connection_pool (2.2.0)
+    distribution (0.7.3)
     domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
@@ -84,6 +88,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    recursive-open-struct (1.0.1)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -105,7 +110,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faker
   health-data-standards!
   pry
   ruby-graphviz
@@ -113,4 +117,4 @@ DEPENDENCIES
   synthea_graphviz!
 
 BUNDLED WITH
-   1.11.1
+   1.11.2
