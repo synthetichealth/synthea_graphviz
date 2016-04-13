@@ -15,7 +15,7 @@ g = GraphViz.new( :G, :type => :digraph )
 
 # Create the list of items
 items = []
-Synthea::Rules.rules.each do |key,rule|
+Synthea::Rules.metadata.each do |key,rule|
   items << key
   items << rule[:inputs]
   items << rule[:outputs]
@@ -27,13 +27,13 @@ nodes = {}
 items.each{|i|nodes[i]=g.add_node(i.to_s)}
 
 # Make items that are not rules boxes
-components = nodes.keys - Synthea::Rules.rules.keys
+components = nodes.keys - Synthea::Rules.metadata.keys
 components.each{|i|nodes[i]['shape']='Box'}
 
 # Create the edges
 edges = []
 
-Synthea::Rules.rules.each do |key,rule|
+Synthea::Rules.metadata.each do |key,rule|
   node = nodes[key]
   begin
     rule[:inputs].each do |input|
