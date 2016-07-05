@@ -22,6 +22,7 @@ PATH
   remote: ../synthea
   specs:
     synthea (1.0.0)
+      area
       distribution (~> 0.7, >= 0.7.0)
       faker (~> 1.6, >= 1.6.0)
       fhir_client
@@ -47,6 +48,8 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    area (0.10.0)
+      fastercsv (~> 1.5)
     bcp47 (0.3.3)
       i18n
     bson (3.2.6)
@@ -62,6 +65,7 @@ GEM
       i18n (~> 0.5)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
+    fastercsv (1.5.5)
     fhir_client (1.0.2)
       activesupport (>= 3)
       addressable (>= 2.3)
