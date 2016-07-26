@@ -93,7 +93,7 @@ def generateWorkflowBasedGraphs()
         node['style'] = 'rounded,filled'
         node['fontcolor'] = 'white'
       when 'Guard'
-        details = logicDetails(state['if'])
+        details = logicDetails(state['allow'])
       when 'Delay'
         if state.has_key? 'range'
           r = state['range']
@@ -140,6 +140,11 @@ def generateWorkflowBasedGraphs()
           pct = t['distribution'] * 100
           pct = pct.to_i if pct == pct.to_i
           g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "#{pct}%"})
+        end
+      elsif state.has_key? 'conditional_transition'
+        state['conditional_transition'].each_with_index do |t,i|
+          cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'fallback'
+          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "[#{i}] #{cnd}"})
         end
       end
     end
