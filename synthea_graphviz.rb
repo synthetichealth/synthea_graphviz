@@ -93,7 +93,7 @@ def generateWorkflowBasedGraphs()
         node['style'] = 'rounded,filled'
         node['fontcolor'] = 'white'
       when 'Guard'
-        details = logicDetails(state['allow'])
+        details = "Allow if " + logicDetails(state['allow'])
       when 'Delay'
         if state.has_key? 'range'
           r = state['range']
@@ -127,7 +127,11 @@ def generateWorkflowBasedGraphs()
       if state.has_key? 'reason'
         details = details + "Reason: " + state['reason'] + "\\l"
       end
-      node['label'] = details.empty? ? "{ #{name} | #{state['type']} }" : "{ #{name} | { #{state['type']} | #{details} } }"
+      if details.empty?
+        node['label'] = (name == state['type']) ? name : "{ #{name} | #{state['type']} }"
+      else
+        node['label'] = "{ #{name} | { #{state['type']} | #{details} } }"
+      end
       nodeMap[name] = node
     end
 
@@ -143,8 +147,8 @@ def generateWorkflowBasedGraphs()
         end
       elsif state.has_key? 'conditional_transition'
         state['conditional_transition'].each_with_index do |t,i|
-          cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'fallback'
-          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "[#{i}] #{cnd}"})
+          cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'else'
+          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "#{i+1}. #{cnd}"})
         end
       end
     end
@@ -152,10 +156,6 @@ def generateWorkflowBasedGraphs()
     # Generate output image
     g.output( :png => "#{wf['name']}.png" )
   end
-end
-
-def workflowNodeLabel(name, type, details = "")
-  "{ #{name} | { #{type} | #{details} } }"
 end
 
 def logicDetails(logic)
