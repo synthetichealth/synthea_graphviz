@@ -85,7 +85,7 @@ def generateWorkflowBasedGraphs()
     nodeMap = {}
     wf = JSON.parse(File.read(wf_file))
     wf['states'].each do |name, state|
-      node = g.add_nodes(name, {'shape': 'record', 'style': 'rounded'})
+      node = g.add_nodes(name, {'shape'=> 'record', 'style'=> 'rounded'})
       details = ''
       case state['type']
       when 'Initial', 'Terminal'
@@ -143,12 +143,12 @@ def generateWorkflowBasedGraphs()
         state['distributed_transition'].each do |t|
           pct = t['distribution'] * 100
           pct = pct.to_i if pct == pct.to_i
-          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "#{pct}%"})
+          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{pct}%"})
         end
       elsif state.has_key? 'conditional_transition'
         state['conditional_transition'].each_with_index do |t,i|
           cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'else'
-          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label': "#{i+1}. #{cnd}"})
+          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{i+1}. #{cnd}"})
         end
       end
     end
