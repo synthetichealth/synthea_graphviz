@@ -100,7 +100,7 @@ def generateWorkflowBasedGraphs()
           details = "#{r['low']} - #{r['high']} #{r['unit']}"
         elsif state.has_key? 'exact'
           e = state['exact']
-          details = "#{r['quantity']} #{r['unit']}"
+          details = "#{e['quantity']} #{e['unit']}"
         end 
       when 'Encounter'
         if state['wellness']
