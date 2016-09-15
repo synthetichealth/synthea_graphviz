@@ -150,6 +150,22 @@ def generateWorkflowBasedGraphs()
           cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'else'
           g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{i+1}. #{cnd}"})
         end
+      elsif state.has_key? 'complex_transition'
+        transitions = Hash.new() { |hsh, key| hsh[key] = [] }
+
+        state['complex_transition'].each do |t|
+          cond = t.has_key?('condition') ? logicDetails(t['condition']) : 'else'
+          t['distributions'].each do |dist|
+            pct = dist['distribution'] * 100
+            pct = pct.to_i if pct == pct.to_i
+            nodes = [name, dist['transition']]
+            transitions[nodes] << "#{cond}: #{pct}%"
+          end
+        end
+
+        transitions.each do |nodes, labels|
+          g.add_edges( nodeMap[nodes[0]], nodeMap[nodes[1]], {'label'=> labels.join(',\n')})
+        end
       end
     end
 
@@ -180,6 +196,8 @@ def logicDetails(logic)
     "gender is '#{logic['gender']}'\\l"
   when 'Age'
     "age \\#{logic['operator']} #{logic['quantity']} #{logic['unit']}\\l"
+  when 'Socioeconomic Status'
+    "#{logic['category']} Socioeconomic Status"
   else
     "UNSUPPORTED_CONDITION(#{logic['condition_type']})\\l"
   end
