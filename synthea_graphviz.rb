@@ -105,7 +105,10 @@ def generateWorkflowBasedGraphs()
       when 'Encounter'
         if state['wellness']
           details = 'Wait for regularly scheduled wellness encounter'
-        end       
+        end
+      when 'SetAttribute'
+        v = state['value']
+        details = "Set '#{state['attribute']}' = #{v ? "'#{v}'" : 'nil'}"
       end
 
       # Things common to many states
@@ -126,6 +129,15 @@ def generateWorkflowBasedGraphs()
       end
       if state.has_key? 'reason'
         details = details + "Reason: " + state['reason'] + "\\l"
+      end
+      if state.has_key? 'medication_order'
+        details = details + "Prescribed at: #{state['medication_order']}\\l"
+      end
+      if state.has_key? 'assign_to_attribute'
+        details = details + "Assign to Attribute: '#{state['assign_to_attribute']}'\\l"
+      end
+      if state.has_key? 'referenced_by_attribute'
+        details = details + "Referenced By Attribute: '#{state['referenced_by_attribute']}'\\l"
       end
       if details.empty?
         node['label'] = (name == state['type']) ? name : "{ #{name} | #{state['type']} }"
@@ -197,7 +209,16 @@ def logicDetails(logic)
   when 'Age'
     "age \\#{logic['operator']} #{logic['quantity']} #{logic['unit']}\\l"
   when 'Socioeconomic Status'
-    "#{logic['category']} Socioeconomic Status"
+    "#{logic['category']} Socioeconomic Status\\l"
+  when 'Date'
+    "Year is \\#{logic['operator']} #{logic['year']}\\l"
+  when 'Attribute'
+    v = logic['value']
+    if v
+      "Attribute: '#{logic['attribute']}' is \\#{logic['operator']} #{v}\\l"
+    else
+      "Attribute: '#{logic['attribute']}' \\#{logic['operator']}\\l"
+    end
   else
     "UNSUPPORTED_CONDITION(#{logic['condition_type']})\\l"
   end
