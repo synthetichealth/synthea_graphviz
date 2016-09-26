@@ -73,7 +73,7 @@ def generateRulesBasedGraph()
   end
 
   # Generate output image
-  g.output( :png => "synthea_rules.png" )
+  g.output( :png => "output/synthea_rules.png" )
 end
 
 def generateWorkflowBasedGraphs()
@@ -182,7 +182,7 @@ def generateWorkflowBasedGraphs()
     end
 
     # Generate output image
-    g.output( :png => "#{wf['name']}.png" )
+    g.output( :png => "output/#{wf['name']}.png" )
   end
 end
 
@@ -214,7 +214,7 @@ def logicDetails(logic)
     "Year is \\#{logic['operator']} #{logic['year']}\\l"
   when 'Attribute'
     v = logic['value']
-    if v
+    if !v.nil?
       "Attribute: '#{logic['attribute']}' is \\#{logic['operator']} #{v}\\l"
     else
       "Attribute: '#{logic['attribute']}' \\#{logic['operator']}\\l"
@@ -224,6 +224,7 @@ def logicDetails(logic)
   end
 end
 
+puts 'Rendering graphs to `./output` folder...'
 generateRulesBasedGraph()
 generateWorkflowBasedGraphs()
-
+puts 'Done.'
