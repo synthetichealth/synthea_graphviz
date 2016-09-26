@@ -150,17 +150,29 @@ def generateWorkflowBasedGraphs()
     # Create the edges based on the transitions
     wf['states'].each do |name, state|
       if state.has_key? 'direct_transition'
-        g.add_edges( nodeMap[name], nodeMap[state['direct_transition']] )
+        begin
+          g.add_edges( nodeMap[name], nodeMap[state['direct_transition']] )
+        rescue
+          puts "State '#{name}' is transitioning to an unknown state: '#{state['direct_transition']}'"
+        end
       elsif state.has_key? 'distributed_transition'
         state['distributed_transition'].each do |t|
           pct = t['distribution'] * 100
           pct = pct.to_i if pct == pct.to_i
-          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{pct}%"})
+          begin
+            g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{pct}%"})
+          rescue
+            puts "State '#{name}' is transitioning to an unknown state: '#{t['transition']}'"
+          end
         end
       elsif state.has_key? 'conditional_transition'
         state['conditional_transition'].each_with_index do |t,i|
           cnd = t.has_key?('condition') ? logicDetails(t['condition']) : 'else'
-          g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{i+1}. #{cnd}"})
+          begin
+            g.add_edges( nodeMap[name], nodeMap[t['transition']], {'label'=> "#{i+1}. #{cnd}"})
+          rescue
+            puts "State '#{name}' is transitioning to an unknown state: '#{t['transition']}'"
+          end
         end
       elsif state.has_key? 'complex_transition'
         transitions = Hash.new() { |hsh, key| hsh[key] = [] }
@@ -176,7 +188,11 @@ def generateWorkflowBasedGraphs()
         end
 
         transitions.each do |nodes, labels|
-          g.add_edges( nodeMap[nodes[0]], nodeMap[nodes[1]], {'label'=> labels.join(',\n')})
+          begin
+            g.add_edges( nodeMap[nodes[0]], nodeMap[nodes[1]], {'label'=> labels.join(',\n')})
+          rescue
+            puts "State '#{nodes[0]}' is transitioning to an unknown state: '#{nodes[1]}'"
+          end
         end
       end
     end
