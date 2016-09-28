@@ -94,7 +94,7 @@ def generateWorkflowBasedGraphs()
         node['fontcolor'] = 'white'
       when 'Guard'
         details = "Allow if " + logicDetails(state['allow'])
-      when 'Delay'
+      when 'Delay', 'Death'
         if state.has_key? 'range'
           r = state['range']
           details = "#{r['low']} - #{r['high']} #{r['unit']}"
