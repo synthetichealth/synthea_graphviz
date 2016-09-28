@@ -109,6 +109,15 @@ def generateWorkflowBasedGraphs()
       when 'SetAttribute'
         v = state['value']
         details = "Set '#{state['attribute']}' = #{v ? "'#{v}'" : 'nil'}"
+      when 'Symptom'
+        s = state['symptom']
+        if state.has_key? 'range'
+          r = state['range']
+          details = "#{s}: #{r['low']} - #{r['high']}"
+        elsif state.has_key? 'exact'
+          e = state['exact']
+          details = "#{s}: #{e['quantity']}"
+        end
       end
 
       # Things common to many states
@@ -228,13 +237,12 @@ def logicDetails(logic)
     "#{logic['category']} Socioeconomic Status\\l"
   when 'Date'
     "Year is \\#{logic['operator']} #{logic['year']}\\l"
+  when 'Symptom'
+    "Symptom: '#{logic['symptom']}' \\#{logic['operator']} #{logic['value']}\\l"
+  when 'PriorState'
+    "state '#{logic['name']}' has been processed\\l"
   when 'Attribute'
-    v = logic['value']
-    if !v.nil?
-      "Attribute: '#{logic['attribute']}' is \\#{logic['operator']} #{v}\\l"
-    else
-      "Attribute: '#{logic['attribute']}' \\#{logic['operator']}\\l"
-    end
+    "Attribute: '#{logic['attribute']}' \\#{logic['operator']} #{logic['value']}\\l"
   else
     "UNSUPPORTED_CONDITION(#{logic['condition_type']})\\l"
   end
