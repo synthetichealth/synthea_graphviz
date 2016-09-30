@@ -1,5 +1,7 @@
 # Synthea GraphViz
 
+# This project has been merged into `synthea` proper and is no longer maintained.
+
 Synthea Rule Visualization, requires GraphViz.
 
 ```
